@@ -8,6 +8,9 @@ sap.ui.require([
 
 	// Attach an anonymous function to the SAPUI5 'init' event
 	sap.ui.getCore().attachInit(function () {
+		var oProductModel = new JSONModel();
+		oProductModel.loadData("./model/Products.json");
+		sap.ui.getCore().setModel(oProductModel, "products");
 		var oModel = new JSONModel({
 						firstName: "Harry",
 			lastName: "Hawk",
@@ -18,7 +21,9 @@ sap.ui.require([
 				city: "Walldorf",
 				zip: "69190",
 				country: "Germany"
-			}
+			},
+			"salesToDate" : 12345.6789,
+			"currencyCode" : "EUR"
 		});
 	var oResourceModel = new ResourceModel({
 			bundleName: "DataBinding.DataBinding.i18n.i18n"
@@ -29,8 +34,14 @@ sap.ui.require([
 		sap.ui.getCore().setModel(oModel);
 		// Create a text UI element that displays a hardcoded text string
 		// Display the XML view called "App"
-		new XMLView({
+		var oView = new XMLView({
 			viewName: "DataBinding.DataBinding.view.App"
 		}).placeAt("content");
+				// Register the view with the message manager
+		sap.ui.getCore().getMessageManager().registerObject(oView, true);
+
+
+		// Insert the view into the DOM
+		oView.placeAt("content");
 	});
 });
